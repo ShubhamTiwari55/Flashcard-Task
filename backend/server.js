@@ -7,10 +7,10 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Shubham@559',
-  database: 'flashcards_db',
+  host: 'database-1.chaic22ui73t.ap-south-1.rds.amazonaws.com',
+  user: 'admin',
+  password: 'Shubham',
+  database: 'database-1',
 });
 
 db.connect((err) => {
