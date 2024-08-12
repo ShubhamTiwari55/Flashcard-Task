@@ -30,7 +30,7 @@ app.use('/api', createProxyMiddleware({
 }));
 
 // Get all flashcards (this route still operates locally)
-app.get('/', (req, res) => {
+app.get('/api/flashcards', (req, res) => {
   db.query('SELECT * FROM flashcards', (err, result) => {
     if (err) throw err;
     res.send(result);

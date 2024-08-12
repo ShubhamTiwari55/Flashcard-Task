@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL of your backend API
-const API_URL = 'http://3.110.175.178:5000';
+const API_URL = 'http://3.110.175.178:5000/api/flashcards';
 
 export const getFlashcards = async () => {
   const response = await axios.get(API_URL);
