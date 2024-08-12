@@ -7,10 +7,10 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-  host: 'database-1.chaic22ui73t.ap-south-1.rds.amazonaws.com',
-  user: 'admin',
-  password: 'shubham559',
-  database: 'database-1',
+  host: 'localhost',
+  user: 'root',
+  password: 'Shubham@559',
+  database: 'flashcards_db',
 });
 
 db.connect((err) => {
@@ -58,5 +58,5 @@ app.delete('/api/flashcards/:id', (req, res) => {
 });
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log('Server is running on port 5000');
 });
