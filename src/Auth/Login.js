@@ -1,75 +1,88 @@
 import React, { useState } from 'react';
-import { auth, googleProvider } from '../firebase';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { auth, googleProvider } from '../firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 
-function Login() {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [isSignup, setIsSignup] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      handleRedirect(user);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleGoogleSignIn = async () => {
     try {
-      const userCredential = await signInWithPopup(auth, googleProvider);
-      const user = userCredential.user;
-      handleRedirect(user);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const handleRedirect = (user) => {
-    // Example logic based on email domain
-    if (user.email.includes('@admin.com')) {
-      navigate('/admin');
-    } else {
+      if (isSignup) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
       navigate('/user');
+    } catch (error) {
+      console.error('Authentication Error:', error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate('/user');
+    } catch (error) {
+      console.error('Google Login Error:', error);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h2 className="text-2xl font-semibold mb-4">Login</h2>
-      <input
-        className="w-80 p-2 mb-4 border rounded"
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        className="w-80 p-2 mb-4 border rounded"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+      <h2 className="text-3xl font-bold mb-6">{isSignup ? 'Sign Up' : 'Login'}</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 rounded-lg bg-gray-800 text-white"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 rounded-lg bg-gray-800 text-white"
+        />
+        <button
+          type="submit"
+          className="w-full p-2 rounded-lg bg-red-600 hover:bg-red-700 transition duration-300 ease-in-out"
+        >
+          {isSignup ? 'Sign Up' : 'Login'}
+        </button>
+      </form>
       <button
-        className="px-6 py-2 mb-4 bg-green-500 text-white rounded hover:bg-green-600"
-        onClick={handleLogin}
-      >
-        Login
-      </button>
-      <button
-        className="px-6 py-2 mb-4 bg-red-500 text-white rounded hover:bg-red-600"
-        onClick={handleGoogleSignIn}
+        onClick={handleGoogleLogin}
+        className="mt-4 p-2 rounded-lg bg-red-600 hover:bg-red-700 transition duration-300 ease-in-out"
       >
         Sign in with Google
       </button>
+      <p className="mt-4">
+        {isSignup ? 'Already have an account?' : "Don't have an account?"}
+        <button
+          onClick={() => setIsSignup(!isSignup)}
+          className="text-red-400 hover:text-red-500 ml-2"
+        >
+          {isSignup ? 'Login here' : 'Sign up here'}
+        </button>
+      </p>
+      <p className="mt-4">
+        <button
+          onClick={() => navigate('/admin/login')}
+          className="text-red-400 hover:text-red-500"
+        >
+          Login as Admin
+        </button>
+      </p>
     </div>
   );
-}
+};
 
 export default Login;

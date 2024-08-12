@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getFlashcards, addFlashcard, updateFlashcard, deleteFlashcard } from './flashcardService'; // Import CRUD operations
 import { useNavigate } from 'react-router-dom';
+import { logout } from './Auth/authService'; // Import logout function from authService
 
 function Admin() {
   const [flashcards, setFlashcards] = useState([]);
@@ -71,20 +72,36 @@ function Admin() {
     setEditFlashcard(flashcard);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/'); // Redirect to login page after logout
+    } catch (err) {
+      setError('Logout failed. Please try again.');
+    }
+  };
+
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-      {error && <p className="text-red-500">{error}</p>}
+    <div className="bg-black text-red-400 min-h-screen p-4">
+      <h1 className="text-4xl font-bold mb-4">Admin Dashboard</h1>
+      {error && <p className="text-red-300">{error}</p>}
+
+      <button
+        onClick={handleLogout}
+        className="mb-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+      >
+        Logout
+      </button>
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">Add Flashcard</h2>
+        <h2 className="text-2xl font-semibold mb-2">Add Flashcard</h2>
         <form onSubmit={handleAddFlashcard} className="space-y-4">
           <input
             type="text"
             value={newFlashcard.question}
             onChange={(e) => setNewFlashcard({ ...newFlashcard, question: e.target.value })}
             placeholder="Question"
-            className="px-4 py-2 border border-gray-300 rounded"
+            className="px-4 py-2 border border-red-600 bg-gray-800 text-red-400 rounded"
             required
           />
           <input
@@ -92,12 +109,12 @@ function Admin() {
             value={newFlashcard.answer}
             onChange={(e) => setNewFlashcard({ ...newFlashcard, answer: e.target.value })}
             placeholder="Answer"
-            className="px-4 py-2 border border-gray-300 rounded"
+            className="px-4 py-2 border border-red-600 bg-gray-800 text-red-400 rounded"
             required
           />
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             Add Flashcard
           </button>
@@ -105,13 +122,13 @@ function Admin() {
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold mb-2">Manage Flashcards</h2>
+        <h2 className="text-2xl font-semibold mb-2">Manage Flashcards</h2>
         {flashcards.length === 0 ? (
           <p>No flashcards available.</p>
         ) : (
           <ul className="space-y-4">
             {flashcards.map((flashcard) => (
-              <li key={flashcard.id} className="border border-gray-300 p-4 rounded">
+              <li key={flashcard.id} className="border border-red-600 bg-gray-800 p-4 rounded">
                 <p className="font-bold">Question:</p>
                 <p>{flashcard.question}</p>
                 <p className="font-bold">Answer:</p>
@@ -119,13 +136,13 @@ function Admin() {
                 <div className="mt-4 flex space-x-4">
                   <button
                     onClick={() => handleStartEditing(flashcard)}
-                    className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeleteFlashcard(flashcard.id)}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                    className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800"
                   >
                     Delete
                   </button>
@@ -138,14 +155,14 @@ function Admin() {
 
       {editingId && (
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-2">Edit Flashcard</h2>
+          <h2 className="text-2xl font-semibold mb-2">Edit Flashcard</h2>
           <form onSubmit={handleEditFlashcard} className="space-y-4">
             <input
               type="text"
               value={editFlashcard.question}
               onChange={(e) => setEditFlashcard({ ...editFlashcard, question: e.target.value })}
               placeholder="Question"
-              className="px-4 py-2 border border-gray-300 rounded"
+              className="px-4 py-2 border border-red-600 bg-gray-800 text-red-400 rounded"
               required
             />
             <input
@@ -153,12 +170,12 @@ function Admin() {
               value={editFlashcard.answer}
               onChange={(e) => setEditFlashcard({ ...editFlashcard, answer: e.target.value })}
               placeholder="Answer"
-              className="px-4 py-2 border border-gray-300 rounded"
+              className="px-4 py-2 border border-red-600 bg-gray-800 text-red-400 rounded"
               required
             />
             <button
               type="submit"
-              className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             >
               Save Changes
             </button>
@@ -168,7 +185,7 @@ function Admin() {
                 setEditingId(null);
                 setEditFlashcard({ id: '', question: '', answer: '' });
               }}
-              className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
             >
               Cancel
             </button>

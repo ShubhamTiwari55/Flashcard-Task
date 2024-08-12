@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Main from './Main';  // Ensure this path is correct
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Main />
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );
