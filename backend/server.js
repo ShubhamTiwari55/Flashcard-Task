@@ -25,7 +25,7 @@ db.connect((err) => {
 
 // Proxy setup for forwarding API requests
 app.use('/api', createProxyMiddleware({
-  target: 'https://65.0.61.24:5000',  // Remote API server
+  target: 'http://65.0.61.24:5000',  // Remote API server
   changeOrigin: true,
 }));
 
