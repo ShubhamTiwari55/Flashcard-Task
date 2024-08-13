@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Database connection setup to remote server
 const db = mysql.createConnection({
-  host: '3.110.175.178',  // Change this to the remote database IP address
+  host: 'localhost',  // Change this to the remote database IP address
   user: 'root',
   password: 'Shubham@559',
   database: 'flashcards_db',
